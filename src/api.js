@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_KEY = "";
+const API_KEY = "de867676b7ca457aa7041433220504";
 
 export function useWeather(query) {
   const [loading, setLoading] = useState(true);
