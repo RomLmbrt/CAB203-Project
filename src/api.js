@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 
-const API_KEY = "de867676b7ca457aa7041433220504";
+const API_KEY =
+  "701e926c-e152-11ec-ab6b-0242ac130002-701e930c-e152-11ec-ab6b-0242ac130002";
 
 export function useWeather(query) {
   const [loading, setLoading] = useState(true);
   const [headlines, setHeadlines] = useState([]);
   const [error, setError] = useState(null);
 
+  const lat = 60.936;
+  const lng = 5.114;
+
   useEffect(() => {
-    getForecastByQuery(query)
+    getForecastByQuery({ latitude: lat, longitude: lng })
       .then((forecasts) => {
         setHeadlines(forecasts);
         setLoading(false);
@@ -26,23 +30,21 @@ export function useWeather(query) {
 
 function getForecastByQuery(q) {
   return fetch(
-    `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${q}`
-  )
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res);
-      if ("error" in res) {
-        throw new Error(res.error.message);
+    `https://api.stormglass.io/v2/tide/extremes/point?lat=${q.latitude}&lng=${q.longitude}&start=2019-03-15&end=2019-03-15`,
+    {
+      headers: {
+        Authorization: API_KEY
       }
-      return res.forecast.forecastday[0].hour;
-    })
-    .then((forecasts) =>
+    }
+  )
+    .then((response) => response.json())
+    .then((forecasts) => {
       forecasts.map((forecast) => ({
-        time: forecast.time,
-        text: forecast.condition.text,
-        temp: forecast.temp_c,
-        wind: forecast.wind_kph,
-        icon: forecast.condition.icon
-      }))
-    );
+        time: forecast.height,
+        text: forecast.time,
+        temp: forecast.type,
+        wind: forecast.type,
+        icon: forecast.type
+      }));
+    });
 }

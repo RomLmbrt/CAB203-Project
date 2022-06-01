@@ -2,6 +2,9 @@ import { useState } from "react";
 import Headline from "./Headline";
 import SearchBar from "./SearchBar";
 import { useWeather } from "../api";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Forecast from "./Forecast";
 
 export default function App() {
   const [query, setQuery] = useState("Brisbane");
@@ -11,7 +14,13 @@ export default function App() {
   }
   return (
     <div className="App">
-      <h1>Weather forecast for {query}</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/forecast" element={<Forecast />} />
+        </Routes>
+      </BrowserRouter>
+
+      <h1>Surfing Forecast </h1>
       <SearchBar onSubmit={setQuery} />
 
       {error === null ? (
